@@ -1,0 +1,38 @@
+CARPETA DE IMÁGENES — BARQUILOVERS
+====================================
+
+Aquí puedes colocar las fotos reales de tu marca (productos, sucursales, 
+equipo, galería, etc). Por ahora la página usa imágenes de muestra 
+(Unsplash) para que se vea completa mientras agregas las tuyas.
+
+CÓMO AGREGAR TUS PROPIAS IMÁGENES
+----------------------------------
+1. Copia tus fotos dentro de esta carpeta "images/".
+   Sugerencia de nombres:
+     images/hero-helado.jpg
+     images/producto-barquilla-choco.jpg
+     images/producto-malteada-fresa.jpg
+     images/nosotros-tienda.jpg
+     images/galeria-1.jpg, galeria-2.jpg, galeria-3.jpg...
+
+2. Abre "index.html" o "js/main.js" y busca las rutas que empiezan con
+   "https://images.unsplash.com/..." — reemplázalas por la ruta local,
+   por ejemplo:
+
+     ANTES: img: "https://images.unsplash.com/photo-xxxx"
+     DESPUÉS: img: "images/producto-barquilla-choco.jpg"
+
+   Y en el HTML (sección "Nosotros"):
+     ANTES: <img src="https://images.unsplash.com/photo-xxxx" ...>
+     DESPUÉS: <img src="images/nosotros-tienda.jpg" ...>
+
+3. Guarda y recarga index.html en el navegador.
+
+DÓNDE ESTÁ CADA IMAGEN EN EL CÓDIGO
+-------------------------------------
+- Fotos de productos (helados, barquillas, malteadas, etc): js/main.js → arreglo PRODUCTS
+- Fotos de la galería: js/main.js → arreglo GALLERY_IMGS
+- Foto de la sección "Nosotros": index.html → busca <!-- ============ NOSOTROS ============ -->
+
+Formatos recomendados: .jpg o .webp, idealmente comprimidas 
+(menos de 300 KB cada una) para que la página cargue rápido.

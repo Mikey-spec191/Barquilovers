@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BARQUILOVERS — Tu cita ideal ❤️</title>
+<meta name="description" content="BARQUILOVERS — helados, barquillas y malteadas artesanales. Ordena en línea, descubre promociones y encuentra tu sucursal más cercana." />
+<meta property="og:title" content="BARQUILOVERS — Tu cita ideal ❤️" />
+<meta property="og:description" content="Helados artesanales, barquillas, malteadas y sundaes. Pide ahora." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          rojo: { DEFAULT: '#E5342A', dark: '#B8231B', light: '#FF5C4D' },
+          amarillo: { DEFAULT: '#FFC93C', dark: '#F2A900' },
+          choco: { DEFAULT: '#4A2A1B', dark: '#2E1810', light: '#7A4A30' },
+          crema: { DEFAULT: '#FFF6E9', dark: '#FCEBD4' },
+        },
+        fontFamily: {
+          display: ['Fredoka', 'sans-serif'],
+          body: ['Poppins', 'sans-serif'],
+        },
+        borderRadius: { '4xl': '2rem', '5xl': '2.5rem' },
+        boxShadow: {
+          soft: '0 10px 40px -10px rgba(74,42,27,0.18)',
+          glow: '0 0 60px -10px rgba(229,52,42,0.35)',
+        }
+      }
+    }
+  }
+</script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="text-choco dark:text-crema dark:bg-choco-dark transition-colors duration-300">
+
+<!-- ============ LOADER ============ -->
+<div id="loader" class="fixed inset-0 z-[100] bg-crema dark:bg-choco-dark flex items-center justify-center transition-opacity duration-500">
+  <div class="text-center">
+    <div class="text-6xl cone-spin inline-block">🍦</div>
+    <p class="mt-4 font-display text-rojo text-lg tracking-wide">BARQUILOVERS</p>
+  </div>
+</div>
+
+<!-- ============ NAVBAR ============ -->
+<header id="navbar" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+  <nav class="max-w-7xl mx-auto flex items-center justify-between px-5 md:px-8 py-4">
+    <a href="#hero" class="font-display text-2xl md:text-3xl text-rojo flex items-center gap-2">
+      🍧 <span>Barquilovers</span>
+    </a>
+    <div class="hidden lg:flex items-center gap-8 font-medium text-sm">
+      <a href="#productos" class="hover:text-rojo transition-colors">Productos</a>
+      <a href="#promociones" class="hover:text-rojo transition-colors">Promociones</a>
+      <a href="#nosotros" class="hover:text-rojo transition-colors">Nosotros</a>
+      <a href="#galeria" class="hover:text-rojo transition-colors">Galería</a>
+      <a href="#sucursales" class="hover:text-rojo transition-colors">Sucursales</a>
+      <a href="#mayoreo" class="hover:text-rojo transition-colors">Al mayoreo</a>
+      <a href="#contacto" class="hover:text-rojo transition-colors">Contacto</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button id="searchBtn" aria-label="Buscar productos" class="w-9 h-9 rounded-full grid place-items-center hover:bg-amarillo/30 transition-colors">🔍</button>
+      <button id="themeToggle" aria-label="Cambiar modo oscuro" class="w-9 h-9 rounded-full grid place-items-center hover:bg-amarillo/30 transition-colors">🌙</button>
+      <button onclick="openOrderModal()" class="hidden md:inline-block btn-primary text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-all">Ordenar ahora</button>
+      <button id="menuBtn" aria-label="Abrir menú" class="lg:hidden w-9 h-9 rounded-full grid place-items-center">☰</button>
+    </div>
+  </nav>
+  <!-- mobile menu -->
+  <div id="mobileMenu" class="hidden lg:hidden glass mx-4 rounded-3xl px-6 py-5 flex flex-col gap-4 font-medium">
+    <a href="#productos">Productos</a>
+    <a href="#promociones">Promociones</a>
+    <a href="#nosotros">Nosotros</a>
+    <a href="#galeria">Galería</a>
+    <a href="#sucursales">Sucursales</a>
+    <a href="#mayoreo">Al mayoreo</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+</header>
+
+<!-- search overlay -->
+<div id="searchOverlay" class="hidden fixed inset-0 z-[60] bg-choco/70 backdrop-blur-sm items-start justify-center pt-28 px-5">
+  <div class="glass w-full max-w-xl rounded-3xl p-6 shadow-soft">
+    <div class="flex items-center gap-3">
+      <span class="text-xl">🔍</span>
+      <input id="searchInput" type="text" placeholder="Busca helados, malteadas, toppings..." class="w-full bg-transparent text-lg placeholder-choco/50 dark:placeholder-crema/50" />
+      <button id="closeSearch" class="text-sm font-semibold text-rojo">Cerrar</button>
+    </div>
+    <div id="searchResults" class="mt-4 space-y-2 text-sm"></div>
+  </div>
+</div>
+
+<!-- order modal -->
+<div id="orderModal" class="hidden fixed inset-0 z-[80] bg-choco/70 backdrop-blur-sm items-center justify-center px-5 py-10 overflow-y-auto">
+  <div class="glass w-full max-w-lg rounded-4xl p-7 shadow-soft relative my-auto">
+    <button id="closeOrderModal" aria-label="Cerrar" class="absolute top-5 right-5 text-xl">✕</button>
+    <span class="text-rojo font-semibold text-xs tracking-widest uppercase">Nuevo pedido</span>
+    <h3 class="font-display text-3xl mt-1">¿Qué se te antoja? 🍦</h3>
+    <p class="text-sm text-choco/60 dark:text-crema/60 mt-2">Completa los datos y elige cómo enviarnos tu pedido.</p>
+
+    <form id="orderForm" class="mt-5 space-y-4">
+      <div>
+        <label class="text-xs font-semibold" for="oName">Tu nombre</label>
+        <input id="oName" required type="text" class="w-full mt-1 rounded-xl px-4 py-3 bg-crema/90 text-choco" placeholder="¿Cómo te llamas?" />
+      </div>
+      <div>
+        <label class="text-xs font-semibold" for="oProduct">Producto(s) a ordenar</label>
+        <input id="oProduct" required type="text" class="w-full mt-1 rounded-xl px-4 py-3 bg-crema/90 text-choco" placeholder="Ej. 2 Barquillas Doble Choco" />
+      </div>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="text-xs font-semibold" for="oQty">Cantidad</label>
+          <input id="oQty" type="number" min="1" value="1" class="w-full mt-1 rounded-xl px-4 py-3 bg-crema/90 text-choco" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold" for="oPhone">Teléfono</label>
+          <input id="oPhone" type="tel" class="w-full mt-1 rounded-xl px-4 py-3 bg-crema/90 text-choco" placeholder="Opcional" />
+        </div>
+      </div>
+      <div>
+        <label class="text-xs font-semibold" for="oNotes">Notas adicionales</label>
+        <textarea id="oNotes" rows="2" class="w-full mt-1 rounded-xl px-4 py-3 bg-crema/90 text-choco" placeholder="Dirección de entrega, sucursal, hora..."></textarea>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-3 pt-2">
+        <button type="button" id="sendOrderWhatsapp" class="flex items-center justify-center gap-2 bg-[#25D366] text-white font-semibold py-3 rounded-full hover:brightness-105 transition-all">
+          <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current" aria-hidden="true"><path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.77.46 3.45 1.28 4.9L2 22l5.24-1.28A9.94 9.94 0 0 0 12.04 22c5.52 0 10-4.48 10-10s-4.48-10-10-10Zm0 18.13c-1.6 0-3.1-.43-4.4-1.19l-.32-.19-3.1.76.77-3.02-.2-.32a8.1 8.1 0 0 1-1.25-4.33c0-4.51 3.68-8.19 8.5-8.19 4.51 0 8.19 3.68 8.19 8.19 0 4.51-3.68 8.29-8.19 8.29Zm4.5-6.13c-.25-.12-1.45-.71-1.67-.79-.22-.08-.39-.12-.55.12-.16.25-.63.79-.78.95-.14.16-.29.18-.53.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.16.04-.31-.02-.43-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.42-.55-.42h-.47c-.16 0-.43.06-.65.31-.22.25-.86.84-.86 2.04 0 1.2.88 2.37 1 2.53.12.16 1.73 2.64 4.2 3.7.59.25 1.04.4 1.4.52.59.19 1.12.16 1.55.1.47-.07 1.45-.59 1.65-1.16.2-.57.2-1.06.14-1.16-.06-.11-.22-.17-.47-.29Z"/></svg>
+          WhatsApp
+        </button>
+        <button type="button" id="sendOrderEmail" class="flex items-center justify-center gap-2 bg-choco text-crema font-semibold py-3 rounded-full hover:brightness-110 transition-all">
+          ✉️ Correo
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<section id="hero" class="relative min-h-screen flex items-center overflow-hidden pt-24">
+  <div class="blob w-[420px] h-[420px] bg-rojo top-[-80px] left-[-100px]"></div>
+  <div class="blob w-[380px] h-[380px] bg-amarillo bottom-[-100px] right-[-60px]"></div>
+
+  <div class="max-w-7xl mx-auto px-5 md:px-8 grid lg:grid-cols-2 gap-12 items-center w-full relative z-10">
+    <div class="reveal">
+      <span class="inline-block bg-amarillo/40 text-choco font-semibold text-xs tracking-wide px-4 py-1.5 rounded-full mb-6">🍨 Hecho fresco cada día</span>
+      <h1 class="font-display text-5xl sm:text-6xl md:text-7xl leading-[0.98] text-choco dark:text-crema">
+        Tu cita ideal <span class="text-rojo">❤️</span>
+      </h1>
+      <p class="mt-6 text-lg text-choco/70 dark:text-crema/70 max-w-md">
+        Barquillas crujientes, helado cremoso y ese primer bocado que se siente como un flechazo. Bienvenido a Barquilovers.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <button onclick="openOrderModal()" class="btn-primary text-white font-semibold px-7 py-3.5 rounded-full transition-all">Ordenar ahora</button>
+        <a href="#promociones" class="btn-ghost border-2 border-choco/15 dark:border-crema/20 font-semibold px-7 py-3.5 rounded-full transition-all">Ver promociones</a>
+      </div>
+      <div class="mt-10 flex items-center gap-6 text-sm text-choco/60 dark:text-crema/60">
+        <div><span class="font-display text-2xl text-rojo">15+</span><br>sabores</div>
+        <div><span class="font-display text-2xl text-rojo">4.9★</span><br>calificación</div>
+        <div><span class="font-display text-2xl text-rojo">20min</span><br>entrega</div>
+      </div>
+    </div>
+
+    <div class="relative reveal-scale">
+      <div class="absolute -top-6 -left-6 text-5xl float">🍫</div>
+      <div class="absolute -bottom-4 -right-2 text-5xl float-delay">🍒</div>
+      <div class="relative mx-auto w-64 sm:w-80 md:w-96 aspect-[3/4] rounded-[3rem] bg-gradient-to-br from-amarillo/30 to-rojo/20 shadow-glow grid place-items-center overflow-hidden">
+        <span class="text-[10rem] sm:text-[13rem] cone-spin">🍦</span>
+      </div>
+    </div>
+  </div>
+
+  <a href="#productos" class="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-xs text-choco/50 dark:text-crema/50 animate-bounce">
+    <span>Desliza</span> <span>↓</span>
+  </a>
+</section>
+
+<!-- promo banner ticker -->
+<div class="bg-choco dark:bg-rojo overflow-hidden py-2.5">
+  <div class="flex whitespace-nowrap marquee-track">
+    <span class="mx-8 text-amarillo font-display tracking-wide">🍦 2x1 en malteadas los martes</span>
+    <span class="mx-8 text-crema font-display tracking-wide">❤️ Combo pareja con 20% off</span>
+    <span class="mx-8 text-amarillo font-display tracking-wide">🚚 Envío gratis desde $250</span>
+    <span class="mx-8 text-crema font-display tracking-wide">🍦 2x1 en malteadas los martes</span>
+    <span class="mx-8 text-amarillo font-display tracking-wide">❤️ Combo pareja con 20% off</span>
+    <span class="mx-8 text-crema font-display tracking-wide">🚚 Envío gratis desde $250</span>
+  </div>
+</div>
+
+<!-- ============ PRODUCTOS ============ -->
+<section id="productos" class="py-24 px-5 md:px-8 max-w-7xl mx-auto">
+  <div class="text-center max-w-2xl mx-auto reveal">
+    <span class="text-rojo font-semibold text-sm tracking-widest uppercase">Nuestro menú</span>
+    <h2 class="font-display text-4xl md:text-5xl mt-3">Algo dulce para cada antojo</h2>
+  </div>
+
+  <div class="flex flex-wrap justify-center gap-3 mt-10 reveal" id="categoryFilters">
+    <button data-cat="todos" class="cat-btn active px-5 py-2 rounded-full font-semibold text-sm bg-rojo text-white">Todos</button>
+    <button data-cat="helados" class="cat-btn px-5 py-2 rounded-full font-semibold text-sm bg-white dark:bg-choco-light/30 hover:bg-amarillo/40 transition-colors">Helados</button>
+    <button data-cat="barquillas" class="cat-btn px-5 py-2 rounded-full font-semibold text-sm bg-white dark:bg-choco-light/30 hover:bg-amarillo/40 transition-colors">Barquillas</button>
+    <button data-cat="malteadas" class="cat-btn px-5 py-2 rounded-full font-semibold text-sm bg-white dark:bg-choco-light/30 hover:bg-amarillo/40 transition-colors">Malteadas</button>
+    <button data-cat="sundaes" class="cat-btn px-5 py-2 rounded-full font-semibold text-sm bg-white dark:bg-choco-light/30 hover:bg-amarillo/40 transition-colors">Sundaes</button>
+    <button data-cat="especiales" class="cat-btn px-5 py-2 rounded-full font-semibold text-sm bg-white dark:bg-choco-light/30 hover:bg-amarillo/40 transition-colors">Especiales</button>
+    <button data-cat="toppings" class="cat-btn px-5 py-2 rounded-full font-semibold text-sm bg-white dark:bg-choco-light/30 hover:bg-amarillo/40 transition-colors">Toppings</button>
+  </div>
+
+  <div id="productGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-7 mt-12"></div>
+</section>
+
+<!-- ============ PROMOCIONES ============ -->
+<section id="promociones" class="py-24 px-5 md:px-8 bg-choco dark:bg-choco-dark text-crema relative overflow-hidden drip">
+  <div class="blob w-[400px] h-[400px] bg-rojo top-10 right-0"></div>
+  <div class="max-w-7xl mx-auto relative z-10">
+    <div class="text-center max-w-2xl mx-auto reveal">
+      <span class="text-amarillo font-semibold text-sm tracking-widest uppercase">No te lo pierdas</span>
+      <h2 class="font-display text-4xl md:text-5xl mt-3">Promociones de la semana</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-7 mt-14">
+      <div class="reveal bg-white/5 border border-white/10 rounded-4xl p-7 card-hover">
+        <span class="bg-rojo text-white text-xs font-bold px-3 py-1 rounded-full">-30%</span>
+        <h3 class="font-display text-2xl mt-4">Combo San Valentín</h3>
+        <p class="text-crema/70 text-sm mt-2">2 barquillas dobles + malteada para compartir.</p>
+        <div id="cd-1" class="countdown-box flex gap-2 mt-5 text-center"></div>
+        <div class="grid grid-cols-2 gap-3 mt-6">
+          <button onclick="openOrderModal('Combo San Valentín (Comprar)')" class="btn-primary text-white text-sm font-semibold py-3 rounded-full">Comprar</button>
+          <button onclick="openOrderModal('Combo San Valentín (Reservar)')" class="bg-white/10 border border-white/20 text-crema text-sm font-semibold py-3 rounded-full hover:bg-white/20 transition-colors">Reservar</button>
+        </div>
+      </div>
+      <div class="reveal bg-white/5 border border-white/10 rounded-4xl p-7 card-hover">
+        <span class="bg-amarillo text-choco text-xs font-bold px-3 py-1 rounded-full">2x1</span>
+        <h3 class="font-display text-2xl mt-4">Martes de Malteada</h3>
+        <p class="text-crema/70 text-sm mt-2">Todas las malteadas al 2x1, solo martes.</p>
+        <div id="cd-2" class="countdown-box flex gap-2 mt-5 text-center"></div>
+        <div class="grid grid-cols-2 gap-3 mt-6">
+          <button onclick="openOrderModal('Martes de Malteada (Comprar)')" class="btn-primary text-white text-sm font-semibold py-3 rounded-full">Comprar</button>
+          <button onclick="openOrderModal('Martes de Malteada (Reservar)')" class="bg-white/10 border border-white/20 text-crema text-sm font-semibold py-3 rounded-full hover:bg-white/20 transition-colors">Reservar</button>
+        </div>
+      </div>
+      <div class="reveal bg-white/5 border border-white/10 rounded-4xl p-7 card-hover">
+        <span class="bg-choco-light text-crema text-xs font-bold px-3 py-1 rounded-full">Nuevo</span>
+        <h3 class="font-display text-2xl mt-4">Sundae Choco-Extremo</h3>
+        <p class="text-crema/70 text-sm mt-2">Triple chocolate con brownie caliente.</p>
+        <div id="cd-3" class="countdown-box flex gap-2 mt-5 text-center"></div>
+        <div class="grid grid-cols-2 gap-3 mt-6">
+          <button onclick="openOrderModal('Sundae Choco-Extremo (Comprar)')" class="btn-primary text-white text-sm font-semibold py-3 rounded-full">Comprar</button>
+          <button onclick="openOrderModal('Sundae Choco-Extremo (Reservar)')" class="bg-white/10 border border-white/20 text-crema text-sm font-semibold py-3 rounded-full hover:bg-white/20 transition-colors">Reservar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NOSOTROS ============ -->
+<section id="nosotros" class="py-24 px-5 md:px-8 max-w-7xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
+  <div class="reveal-scale order-2 lg:order-1 relative">
+    <div class="rounded-4xl overflow-hidden shadow-soft aspect-[4/5]">
+      <img src="https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?q=80&w=1000&auto=format&fit=crop" alt="Heladería Barquilovers" class="w-full h-full object-cover" loading="lazy" />
+    </div>
+    <div class="absolute -bottom-6 -right-6 bg-amarillo rounded-3xl px-6 py-4 shadow-soft hidden sm:block">
+      <p class="font-display text-2xl text-choco">+10 años</p>
+      <p class="text-xs text-choco/70">endulzando citas</p>
+    </div>
+  </div>
+  <div class="order-1 lg:order-2 reveal">
+    <span class="text-rojo font-semibold text-sm tracking-widest uppercase">Nuestra historia</span>
+    <h2 class="font-display text-4xl md:text-5xl mt-3">Nacimos de un antojo que nunca se fue</h2>
+    <p class="mt-5 text-choco/70 dark:text-crema/70">
+      Barquilovers empezó en un pequeño carrito de barrio con una receta familiar de helado artesanal. Hoy seguimos preparando cada barquilla a mano, porque creemos que lo bueno no se apura.
+    </p>
+    <div class="grid sm:grid-cols-3 gap-5 mt-8">
+      <div class="bg-white dark:bg-choco-light/20 rounded-3xl p-5 card-hover">
+        <p class="text-2xl">🎯</p>
+        <p class="font-display mt-2">Misión</p>
+        <p class="text-xs text-choco/60 dark:text-crema/60 mt-1">Crear momentos dulces e inolvidables.</p>
+      </div>
+      <div class="bg-white dark:bg-choco-light/20 rounded-3xl p-5 card-hover">
+        <p class="text-2xl">🔭</p>
+        <p class="font-display mt-2">Visión</p>
+        <p class="text-xs text-choco/60 dark:text-crema/60 mt-1">Ser la heladería favorita de tu ciudad.</p>
+      </div>
+      <div class="bg-white dark:bg-choco-light/20 rounded-3xl p-5 card-hover">
+        <p class="text-2xl">💛</p>
+        <p class="font-display mt-2">Valores</p>
+        <p class="text-xs text-choco/60 dark:text-crema/60 mt-1">Frescura, cariño y calidad artesanal.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GALERÍA ============ -->
+<section id="galeria" class="py-24 px-5 md:px-8 max-w-7xl mx-auto">
+  <div class="text-center max-w-2xl mx-auto reveal">
+    <span class="text-rojo font-semibold text-sm tracking-widest uppercase">Momentos dulces</span>
+    <h2 class="font-display text-4xl md:text-5xl mt-3">Galería</h2>
+  </div>
+  <div class="masonry mt-12" id="galleryGrid"></div>
+</section>
+
+<!-- lightbox -->
+<div id="lightbox" class="hidden fixed inset-0 z-[70] bg-black/85 items-center justify-center p-6">
+  <button id="closeLightbox" class="absolute top-6 right-6 text-white text-3xl">✕</button>
+  <img id="lightboxImg" src="" alt="" class="max-h-[85vh] max-w-full rounded-2xl shadow-soft" />
+</div>
+
+<!-- ============ TESTIMONIOS ============ -->
+<section class="py-24 px-5 md:px-8 bg-amarillo/15">
+  <div class="max-w-3xl mx-auto text-center reveal">
+    <span class="text-rojo font-semibold text-sm tracking-widest uppercase">Lo que dicen</span>
+    <h2 class="font-display text-4xl md:text-5xl mt-3">Clientes felices</h2>
+  </div>
+  <div class="max-w-3xl mx-auto mt-12 relative overflow-hidden">
+    <div id="testiTrack" class="flex transition-transform duration-700 ease-out"></div>
+    <div class="flex justify-center gap-2 mt-8" id="testiDots"></div>
+  </div>
+</section>
+
+<!-- ============ SUCURSALES ============ -->
+<section id="sucursales" class="py-24 px-5 md:px-8 max-w-7xl mx-auto">
+  <div class="text-center max-w-2xl mx-auto reveal">
+    <span class="text-rojo font-semibold text-sm tracking-widest uppercase">Encuéntranos</span>
+    <h2 class="font-display text-4xl md:text-5xl mt-3">Nuestras sucursales</h2>
+  </div>
+  <div class="grid lg:grid-cols-2 gap-8 mt-12 items-start">
+    <div class="rounded-4xl overflow-hidden shadow-soft aspect-[4/3] reveal">
+      <iframe title="Mapa Barquilovers" class="w-full h-full border-0" loading="lazy" src="https://www.google.com/maps?q=heladeria&output=embed"></iframe>
+    </div>
+    <div class="space-y-5 reveal" id="branchList"></div>
+  </div>
+</section>
+
+<!-- ============ VENTAS AL MAYOR ============ -->
+<section id="mayoreo" class="py-24 px-5 md:px-8 bg-choco text-crema rounded-[3rem] max-w-7xl mx-4 sm:mx-8 lg:mx-auto relative overflow-hidden">
+  <div class="blob w-[350px] h-[350px] bg-amarillo -bottom-20 -left-20"></div>
+  <div class="max-w-5xl mx-auto grid lg:grid-cols-2 gap-12 relative z-10 items-center">
+    <div class="reveal">
+      <span class="text-amarillo font-semibold text-sm tracking-widest uppercase">Para tu negocio</span>
+      <h2 class="font-display text-4xl mt-3">Ventas al mayoreo</h2>
+      <p class="mt-4 text-crema/70">Surtimos cafeterías, eventos y tiendas con helado artesanal en volumen, precios especiales y entrega programada.</p>
+      <ul class="mt-6 space-y-3 text-sm">
+        <li class="flex items-center gap-2">✅ Precios preferenciales por volumen</li>
+        <li class="flex items-center gap-2">✅ Entrega refrigerada puntual</li>
+        <li class="flex items-center gap-2">✅ Empaques personalizados</li>
+      </ul>
+    </div>
+    <form id="wholesaleForm" class="glass rounded-4xl p-7 space-y-4 reveal">
+      <div>
+        <label class="text-xs font-semibold" for="wsName">Nombre del negocio</label>
+        <input id="wsName" required type="text" class="w-full mt-1 rounded-xl px-4 py-3 bg-crema/90 text-choco" placeholder="Café Aroma" />
+      </div>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="text-xs font-semibold" for="wsEmail">Correo</label>
+          <input id="wsEmail" required type="email" class="w-full mt-1 rounded-xl px-4 py-3 bg-crema/90 text-choco" placeholder="tu@correo.com" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold" for="wsPhone">Teléfono</label>
+          <input id="wsPhone" required type="tel" class="w-full mt-1 rounded-xl px-4 py-3 bg-crema/90 text-choco" placeholder="+52 55 0000 0000" />
+        </div>
+      </div>
+      <div>
+        <label class="text-xs font-semibold" for="wsMsg">Cuéntanos qué necesitas</label>
+        <textarea id="wsMsg" rows="3" class="w-full mt-1 rounded-xl px-4 py-3 bg-crema/90 text-choco" placeholder="Volumen estimado, frecuencia..."></textarea>
+      </div>
+      <button type="submit" class="w-full btn-primary text-white font-semibold py-3 rounded-full">Enviar solicitud</button>
+      <p id="wsSuccess" class="hidden text-amarillo text-sm text-center">¡Gracias! Te contactaremos pronto 🍦</p>
+    </form>
+  </div>
+</section>
+
+<!-- ============ CONTACTO ============ -->
+<section id="contacto" class="py-24 px-5 md:px-8 max-w-5xl mx-auto">
+  <div class="text-center max-w-2xl mx-auto reveal">
+    <span class="text-rojo font-semibold text-sm tracking-widest uppercase">Hablemos</span>
+    <h2 class="font-display text-4xl md:text-5xl mt-3">Contáctanos</h2>
+  </div>
+  <div class="grid lg:grid-cols-2 gap-10 mt-12">
+    <form id="contactForm" class="space-y-4 reveal" novalidate>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="text-xs font-semibold" for="cName">Nombre</label>
+          <input id="cName" required type="text" class="w-full mt-1 rounded-xl px-4 py-3 bg-white dark:bg-choco-light/20 border border-choco/10 dark:border-crema/10" />
+          <p class="err text-xs text-rojo mt-1 hidden">Escribe tu nombre.</p>
+        </div>
+        <div>
+          <label class="text-xs font-semibold" for="cEmail">Correo</label>
+          <input id="cEmail" required type="email" class="w-full mt-1 rounded-xl px-4 py-3 bg-white dark:bg-choco-light/20 border border-choco/10 dark:border-crema/10" />
+          <p class="err text-xs text-rojo mt-1 hidden">Correo inválido.</p>
+        </div>
+      </div>
+      <div>
+        <label class="text-xs font-semibold" for="cMsg">Mensaje</label>
+        <textarea id="cMsg" required rows="4" class="w-full mt-1 rounded-xl px-4 py-3 bg-white dark:bg-choco-light/20 border border-choco/10 dark:border-crema/10"></textarea>
+        <p class="err text-xs text-rojo mt-1 hidden">Cuéntanos algo, aunque sea corto 🙂</p>
+      </div>
+      <button type="submit" class="btn-primary text-white font-semibold px-7 py-3.5 rounded-full">Enviar mensaje</button>
+      <p id="contactSuccess" class="hidden text-rojo font-semibold text-sm">¡Mensaje enviado! Te responderemos pronto ❤️</p>
+    </form>
+    <div class="reveal space-y-4">
+      <a href="https://wa.me/584120737316" target="_blank" rel="noopener" class="flex items-center gap-4 bg-white dark:bg-choco-light/20 rounded-2xl p-5 card-hover">
+        <span class="w-9 h-9 shrink-0 rounded-full bg-[#25D366] grid place-items-center"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-white" aria-hidden="true"><path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.77.46 3.45 1.28 4.9L2 22l5.24-1.28A9.94 9.94 0 0 0 12.04 22c5.52 0 10-4.48 10-10s-4.48-10-10-10Zm0 18.13c-1.6 0-3.1-.43-4.4-1.19l-.32-.19-3.1.76.77-3.02-.2-.32a8.1 8.1 0 0 1-1.25-4.33c0-4.51 3.68-8.19 8.5-8.19 4.51 0 8.19 3.68 8.19 8.19 0 4.51-3.68 8.29-8.19 8.29Zm4.5-6.13c-.25-.12-1.45-.71-1.67-.79-.22-.08-.39-.12-.55.12-.16.25-.63.79-.78.95-.14.16-.29.18-.53.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.16.04-.31-.02-.43-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.42-.55-.42h-.47c-.16 0-.43.06-.65.31-.22.25-.86.84-.86 2.04 0 1.2.88 2.37 1 2.53.12.16 1.73 2.64 4.2 3.7.59.25 1.04.4 1.4.52.59.19 1.12.16 1.55.1.47-.07 1.45-.59 1.65-1.16.2-.57.2-1.06.14-1.16-.06-.11-.22-.17-.47-.29Z"/></svg></span>
+        <span><b class="block">WhatsApp</b><span class="text-sm text-choco/60 dark:text-crema/60">+58 412-0737316 · Respuesta inmediata</span></span>
+      </a>
+      <a href="https://instagram.com/barquilovers" target="_blank" rel="noopener" class="flex items-center gap-4 bg-white dark:bg-choco-light/20 rounded-2xl p-5 card-hover">
+        <span class="text-2xl">📸</span> <span><b class="block">Instagram</b><span class="text-sm text-choco/60 dark:text-crema/60">@barquilovers</span></span>
+      </a>
+      <a href="#" class="flex items-center gap-4 bg-white dark:bg-choco-light/20 rounded-2xl p-5 card-hover">
+        <span class="text-2xl">📘</span> <span><b class="block">Facebook</b><span class="text-sm text-choco/60 dark:text-crema/60">/barquilovers</span></span>
+      </a>
+      <a href="mailto:hola@barquilovers.com" class="flex items-center gap-4 bg-white dark:bg-choco-light/20 rounded-2xl p-5 card-hover">
+        <span class="text-2xl">✉️</span> <span><b class="block">Correo</b><span class="text-sm text-choco/60 dark:text-crema/60">hola@barquilovers.com</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="bg-choco text-crema pt-16 pb-8 px-5 md:px-8 mt-10">
+  <div class="max-w-7xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+    <div>
+      <p class="font-display text-2xl text-amarillo">🍧 Barquilovers</p>
+      <p class="text-sm text-crema/60 mt-3">Tu cita ideal con el helado. Hecho fresco, servido con cariño.</p>
+      <div class="flex gap-3 mt-4 text-lg">
+        <a href="https://instagram.com/barquilovers" aria-label="Instagram">📸</a>
+        <a href="#" aria-label="Facebook">📘</a>
+        <a href="https://wa.me/584120737316" aria-label="WhatsApp">💬</a>
+      </div>
+    </div>
+    <div>
+      <p class="font-display text-lg text-amarillo">Explorar</p>
+      <ul class="mt-3 space-y-2 text-sm text-crema/70">
+        <li><a href="#productos" class="hover:text-amarillo">Productos</a></li>
+        <li><a href="#promociones" class="hover:text-amarillo">Promociones</a></li>
+        <li><a href="#nosotros" class="hover:text-amarillo">Nosotros</a></li>
+        <li><a href="#galeria" class="hover:text-amarillo">Galería</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="font-display text-lg text-amarillo">Horario</p>
+      <ul class="mt-3 space-y-1 text-sm text-crema/70">
+        <li>Lun – Vie: 11:00 – 22:00</li>
+        <li>Sáb – Dom: 12:00 – 23:00</li>
+      </ul>
+    </div>
+    <div>
+      <p class="font-display text-lg text-amarillo">Sucursal principal</p>
+      <p class="text-sm text-crema/70 mt-3">Av. Central 123, Centro<br/>Ciudad de México</p>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto border-t border-crema/10 mt-10 pt-6 text-xs text-crema/50 flex flex-col sm:flex-row justify-between gap-2">
+    <p>© <span id="year"></span> Barquilovers. Todos los derechos reservados.</p>
+    <p>Diseñado con ❤️ y mucho helado.</p>
+  </div>
+</footer>
+
+<!-- floating buttons -->
+<a href="https://wa.me/584120737316" target="_blank" rel="noopener" aria-label="WhatsApp" class="fixed bottom-6 left-6 z-40 w-14 h-14 rounded-full bg-[#25D366] grid place-items-center shadow-soft hover:scale-110 transition-transform">
+  <svg viewBox="0 0 24 24" class="w-7 h-7 fill-white" aria-hidden="true"><path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.77.46 3.45 1.28 4.9L2 22l5.24-1.28A9.94 9.94 0 0 0 12.04 22c5.52 0 10-4.48 10-10s-4.48-10-10-10Zm0 18.13c-1.6 0-3.1-.43-4.4-1.19l-.32-.19-3.1.76.77-3.02-.2-.32a8.1 8.1 0 0 1-1.25-4.33c0-4.51 3.68-8.19 8.5-8.19 4.51 0 8.19 3.68 8.19 8.19 0 4.51-3.68 8.29-8.19 8.29Zm4.5-6.13c-.25-.12-1.45-.71-1.67-.79-.22-.08-.39-.12-.55.12-.16.25-.63.79-.78.95-.14.16-.29.18-.53.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.16.04-.31-.02-.43-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.42-.55-.42h-.47c-.16 0-.43.06-.65.31-.22.25-.86.84-.86 2.04 0 1.2.88 2.37 1 2.53.12.16 1.73 2.64 4.2 3.7.59.25 1.04.4 1.4.52.59.19 1.12.16 1.55.1.47-.07 1.45-.59 1.65-1.16.2-.57.2-1.06.14-1.16-.06-.11-.22-.17-.47-.29Z"/></svg>
+</a>
+<button id="toTop" aria-label="Volver arriba" class="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full bg-rojo text-white grid place-items-center shadow-soft opacity-0 pointer-events-none transition-all hover:scale-110">↑</button>
+
+<script src="js/main.js"></script>
+</body>
+</html>
